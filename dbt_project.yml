@@ -1,0 +1,167 @@
+
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'dbt_horrorland_analytics'
+version: '1.0.0'
+config-version: 2
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'theme_park'
+
+# These configurations specify where dbt should look for different types of files.
+# The `model-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"  # directory which will store compiled SQL files
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+# In dbt, the default materialization for a model is a view. This means, when you run 
+# dbt run or dbt build, all of your models will be built as a view in your data platform. 
+# The configuration below will override this setting for models in the example folder to 
+# instead be materialized as tables. Any models you add to the root of the models folder will 
+# continue to be built as views. These settings can be overridden in the individual model files
+# using the `{{ config(...) }}` macro.
+
+#dbt-cloud:
+  # Opt in to dbt Cloud deferral only when a real environment ID is provided.
+  # This avoids Fusion implicitly probing Cloud for a missing default deferral environment.
+  #defer-env-id: "{{ env_var('DBT_CLOUD_DEFER_ENV_ID', '') }}"
+
+on-run-start:
+  - "ALTER SESSION SET QUERY_TAG = 'dbt_run_{{ invocation_id }}'"
+  - "{{ safe_create_target_schema('INTERMEDIATE') }}"
+  - "{{ safe_create_target_schema('MACRO_DEMOS') }}"
+  - "{{ safe_elementary_on_run_start() }}"
+
+
+
+# Runs once at the very end of the entire dbt run (after all models finish)
+on-run-end:
+  - "{{ safe_elementary_on_run_end() }}"
+  - "ALTER SESSION SET QUERY_TAG = ''"
+
+
+vars:
+  date_spine_start: '2020-01-01'
+  date_spine_end:   '2026-12-31'
+
+# Filter for halloween spending analysis — override via CLI for narrower dev runs
+  # e.g. dbt run --select agg_halloween_spending --vars '{"halloween_analysis_start_date": "2024-01-01"}'
+  halloween_analysis_start_date: '2023-01-01'
+
+  # Minimum satisfaction rating included in house happiness rankings
+  # e.g. dbt run --select agg_happiest_houses --vars '{"min_satisfaction_rating": 4}'
+  min_satisfaction_rating: 3
+
+  # Snowflake role granted SELECT on all mart tables after each build
+  # Override per environment in CI/CD job config
+  bi_role: 'SYSADMIN'
+
+  # Rolling lookback window for visit frequency analysis (demo_28_var_date_window)
+  # Override: dbt run --vars '{"lookback_days": 30}' --select demo_28_var_date_window
+  lookback_days: 90
+
+  # Spend segmentation thresholds for demo_29_var_spend_tiers
+  # Finance team adjusts these quarterly via CLI override or CI/CD job vars
+  spend_tier_high: 300
+  spend_tier_mid:  100
+
+  # Warehouse used by compute-heavy models (demo_30_warehouse_switch)
+  # dev/CI default: COMPUTE_WH   |   prod override: COMPUTE_WH_LARGE
+  heavy_model_warehouse: 'COMPUTE_WH'
+
+
+  # Demo toggles for governance demos in models/macro_demos
+  # demo_35_schema_drift_append_new_columns: set to 'add_new_column' to append a new
+  # top-level column on the next incremental run without dropping legacy columns.
+  demo_35_schema_drift_mode: 'baseline'
+
+  # demo_36_schema_drift_sync_all_columns: set to 'add_new_column' to add a column,
+  # then 'drop_legacy_column' on a later run to show sync_all_columns removing it.
+  demo_36_schema_drift_mode: 'baseline'
+
+  # Demo toggle for contracted incremental schema evolution.
+  # baseline = original contract, add_new_column = expose a new top-level column
+  # and rely on append_new_columns to extend the target safely.
+  demo_37_contract_incremental_mode: 'baseline'
+  # Elementary package guard: source freshness demo runs should not try to
+  # autoupload freshness results in this project, because the package hook
+  # expects result fields that are undefined in this Fusion preview flow.
+  disable_freshness_results: true
+
+  snapshots:
+  dbt_horrorland_analytics:
+    +target_schema: snapshots
+
+models:
+  dbt_horrorland_analytics:
+
+    +query_tag: 'query_from_dbt'
+
+    staging:
+      +materialized: view
+      +schema: staging
+      +tags: ['staging']
+
+      customer_data:
+        +tags: ['customer_data']
+      park_assets:
+        +tags: ['park_assets']
+      sales:
+        +tags: ['sales']
+      external_haunted:
+        +tags: ['external_haunted']
+      feedback:
+        +tags: ['feedback']
+
+    intermediate:
+      +materialized: ephemeral
+      +schema: intermediate
+      +tags: ['intermediate']
+
+    marts:
+      +materialized: table
+      +schema: marts
+      +tags: ['marts']
+
+      core:
+        +tags: ['core']
+      analytics:
+        +tags: ['analytics']
+
+    utilities:
+      +materialized: table
+      +schema: utilities
+      +tags: ['utilities']
+
+    macro_demos:
+      +enabled: true
+      +materialized: view
+      +schema: macro_demos
+      +tags: ['macro_demo']
+
+  # Pin Elementary models to the elementary schema so hooks write there too.
+  # Without this dbt-fusion defaults to the target schema (DBT_BATCH_DEV).
+  elementary:
+    +schema: elementary
+
+  # Disable dbt_project_evaluator package models in this project.
+  dbt_project_evaluator:
+    +enabled: false
+
+
+
+
