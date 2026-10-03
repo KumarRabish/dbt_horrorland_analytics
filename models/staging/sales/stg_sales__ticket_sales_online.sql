@@ -17,7 +17,7 @@ renamed as (
             when base_price > 0
             then round((discount_amount / base_price)* 100, 2) 
             else 0 
-            end::numeric(5,2) as disocunt_percent,
+            end::numeric(5,2) as discount_percent,
         null::int                                               as visit_hour,
         'credit_card'::varchar                                  as payment_method,
         'online'                                                as purchase_channel,

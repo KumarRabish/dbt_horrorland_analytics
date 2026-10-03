@@ -679,7 +679,7 @@ models:
       - name: purchase_channel
         description: Channel used to purchase the ticket.
         data_type: varchar
-      - name: booking_lead_days
+      - name: booking_lead_delays
         description: Days between ticket purchase and visit date.
         data_type: number(38, 0)
         data_tests:

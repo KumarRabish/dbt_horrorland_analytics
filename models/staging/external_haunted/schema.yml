@@ -123,7 +123,7 @@ unit_tests:
       Two rows in, one row out — only the haunted ride must appear in output.
       Also confirms thrill_level 'extreme' maps to fear_level 5.
     given:
-      - input: source('external_haunted', 'haunted_houses')
+      - input: source('raw', 'raw_rides')
         rows:
           - {ride_id: 1, ride_name: 'Dungeon of Doom', thrill_level: 'extreme',
              is_haunted: true,  capacity_per_hour: 200}

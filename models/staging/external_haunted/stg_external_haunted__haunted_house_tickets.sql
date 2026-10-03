@@ -13,7 +13,7 @@ haunted_houses as (
     select 
         ride_id  as haunted_house_id,
         row_number() over (order by ride_id) as house_rank
-    from {{ source('external_haunted', 'haunted_houses') }}
+    from {{ source('raw', 'raw_rides') }}
     where is_haunted = true
 ),
 
@@ -21,7 +21,7 @@ house_count as (
     select count(*) as cnt from haunted_houses 
 ),
 
-rename as (
+renamed as (
     select
         t.ticket_id,
         t.customer_id,

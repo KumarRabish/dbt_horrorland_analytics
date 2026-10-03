@@ -23,7 +23,7 @@ customer_visit_rollup as (
         sum(case when is_discounted then 1 else 0 end) as discounted_visit_count,
         sum(case when is_same_day_visit then 1 else 0 end) as same_day_visit_count,
         sum(case when is_advance_purchase then 1 else 0 end) as advance_purchase_visit_count,
-        avg(booking_lead_days) as avg_booking_lead_days
+        avg(booking_lead_delays) as avg_booking_lead_delays
     from visits
     group by 1
 ),
@@ -51,7 +51,7 @@ final as (
         r.discounted_visit_count,
         r.same_day_visit_count,
         r.advance_purchase_visit_count,
-        round(r.avg_booking_lead_days, 2) as avg_booking_lead_days,
+        round(r.avg_booking_lead_delays, 2) as avg_booking_lead_delays,
         r.total_visits > 1 as is_repeat_visitor,
         case
             when r.lifetime_total_spend >= 250 then 'High Value'

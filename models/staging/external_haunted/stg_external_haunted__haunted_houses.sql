@@ -12,7 +12,7 @@ with source as (
 
 renamed as (
     select 
-        ride_id::int as hauted_house_id,
+        ride_id::int as haunted_house_id,
         ride_name    as haunted_house_name,
         capacity_per_hour::int as capacity,
         case thrill_level
