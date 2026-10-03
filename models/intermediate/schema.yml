@@ -141,7 +141,7 @@ models:
       - name: total_visit_spend
         description: "Combined visit spend: `ticket_price + in_park_spend`."
 
-      - name: booking_lead_days
+      - name: booking_lead_delays
         description: Days between ticket purchase and visit date.
       - name: is_same_day_visit
         description: TRUE when the ticket was purchased on the visit date.
@@ -253,7 +253,7 @@ unit_tests:
         rows: []
     expect:
       rows:
-        - {ticket_id: 'TK1', customer_id: 'C1', in_park_spend: 0, total_visit_spend: 55.00, booking_lead_days: 0, is_same_day_visit: true, is_advance_purchase: false, feedback_count: 0, has_feedback: false, avg_rating: null}
+        - {ticket_id: 'TK1', customer_id: 'C1', in_park_spend: 0, total_visit_spend: 55.00, booking_lead_delays: 0, is_same_day_visit: true, is_advance_purchase: false, feedback_count: 0, has_feedback: false, avg_rating: null}
 
   - name: test_customer_visit_with_spend_and_feedback
     model: int_customer_visits
@@ -271,5 +271,5 @@ unit_tests:
           - {feedback_id: 'F2', customer_id: 'C2', visit_date: '2024-07-10', rating: 5}
     expect:
       rows:
-        - {ticket_id: 'TK2', in_park_spend: 60.00, total_visit_spend: 140.00, booking_lead_days: 9, is_same_day_visit: false, is_advance_purchase: true, feedback_count: 2, has_feedback: true}
+        - {ticket_id: 'TK2', in_park_spend: 60.00, total_visit_spend: 140.00, booking_lead_delays: 9, is_same_day_visit: false, is_advance_purchase: true, feedback_count: 2, has_feedback: true}
 

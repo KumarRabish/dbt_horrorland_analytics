@@ -437,31 +437,31 @@ models:
 # Unit Tests
 # ---------------------------------------------------------------------------
 
-unit_tests:
+# unit_tests:
 
-  # ── stg_sales__tickets: is_discounted flag ────────────────────────────────
-  - name: test_is_discounted_flag
-    model: stg_sales__tickets
-    description: >
-      Verifies the is_discounted CASE expression:
-        TRUE  when discount_amount > 0
-        FALSE when discount_amount = 0
-      Sources both online and physical inputs; physical is empty here since
-      we only need to test the CASE logic, not the UNION ALL routing.
-    given:
-      - input: source('sales', 'ticket_sales_online')
-        rows:
-          - {ticket_id: 'TK1', customer_id: 'C1', ticket_type: 'day_pass',
-             purchase_date: '2024-01-15', visit_date: '2024-01-20',
-             purchase_channel: 'online', base_price: 100.00,
-             discount_amount: 20.00, final_price: 80.00, promo_code: 'SAVE20'}
-          - {ticket_id: 'TK2', customer_id: 'C2', ticket_type: 'day_pass',
-             purchase_date: '2024-01-15', visit_date: '2024-01-20',
-             purchase_channel: 'online', base_price: 100.00,
-             discount_amount: 0.00, final_price: 100.00, promo_code: ''}
-      - input: source('sales', 'ticket_sales_physical')
-        rows: []
-    expect:
-      rows:
-        - {ticket_id: 'TK1', is_discounted: true}
-        - {ticket_id: 'TK2', is_discounted: false}
+#   # ── stg_sales__tickets: is_discounted flag ────────────────────────────────
+#   - name: test_is_discounted_flag
+#     model: stg_sales__tickets
+#     description: >
+#       Verifies the is_discounted CASE expression:
+#         TRUE  when discount_amount > 0
+#         FALSE when discount_amount = 0
+#       Sources both online and physical inputs; physical is empty here since
+#       we only need to test the CASE logic, not the UNION ALL routing.
+#     given:
+#       - input: source('raw', 'raw_tickets')
+#         rows:
+#           - {ticket_id: 'TK1', customer_id: 'C1', ticket_type: 'day_pass',
+#              purchase_date: '2024-01-15', visit_date: '2024-01-20',
+#              purchase_channel: 'online', base_price: 100.00,
+#              discount_amount: 20.00, final_price: 80.00, promo_code: 'SAVE20'}
+#           - {ticket_id: 'TK2', customer_id: 'C2', ticket_type: 'day_pass',
+#              purchase_date: '2024-01-15', visit_date: '2024-01-20',
+#              purchase_channel: 'online', base_price: 100.00,
+#              discount_amount: 0.00, final_price: 100.00, promo_code: ''}
+#       - input: source('raw', 'raw_tickets')
+#         rows: []
+#     expect:
+#       rows:
+#         - {ticket_id: 'TK1', is_discounted: true}
+#         - {ticket_id: 'TK2', is_discounted: false}

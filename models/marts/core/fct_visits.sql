@@ -21,7 +21,7 @@ select
     v.ticket_type,
     v.purchase_date,
     v.purchase_channel,
-    v.booking_lead_days,
+    v.booking_lead_delays,
     v.is_same_day_visit,
     v.is_advance_purchase,
     v.is_discounted,
