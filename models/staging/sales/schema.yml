@@ -93,13 +93,13 @@ models:
                 values: ['online', 'in_park', 'kiosk', 'phone', 'referral']
 
       - name: base_price
-        description: "{{ doc('ticket_price_definition') }}"
+        description: ticket_price_definition
         data_type: numeric(10,2)
         data_tests:
           - not_null
 
       - name: discount_amount
-        description: "{{ doc('ticket_price_definition') }}"
+        description: ticket_price_definition
         data_type: numeric(12,4)
         data_tests:
           - not_null
@@ -198,7 +198,7 @@ models:
         description: >
           Amount paid by the customer in USD (`final_price` from the raw source), cast
           to `numeric(10,2)`. This is the **primary revenue measure** for this channel.
-          See also: `{{ doc('ticket_price_definition') }}`
+          See also: `ticket_price_definition`
         data_tests:
           - not_null
 

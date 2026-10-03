@@ -17,7 +17,7 @@ haunted_houses as (
     where is_haunted = true
 ),
 
-for house_count as (
+house_count as (
     select count(*) as cnt from haunted_houses 
 ),
 

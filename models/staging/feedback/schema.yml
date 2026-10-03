@@ -158,7 +158,7 @@ models:
           when `ride_id` is NULL or matches no haunted ride.
 
       - name: fear_level
-        description: "{{ doc('fear_level_mapping') }}"
+        description: fear_level_mapping
 
       - name: ticket_price
         description: >

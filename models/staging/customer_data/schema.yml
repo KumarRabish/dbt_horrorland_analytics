@@ -1,8 +1,7 @@
 version: 2
-
 models:
 
-  - name: stg_customers_data__customers
+  - name: stg_customer_data__customers
     description: >
       Staged customer account records from the `customer_data` source (alias of RAW.RAW_CUSTOMERS).
       One row per customer account. Grain is `customer_id`.
@@ -42,8 +41,6 @@ models:
 
       - name: email 
         description: >
-          "{{ doc('pii_warning') }}"
-
           Customer email address, lowercased via `LOWER()` during staging for consistent
           deduplication. Must be unique across all active accounts. For aggregate analysis
           that does not require individual identity (e.g. email domain breakdown), use
@@ -54,34 +51,32 @@ models:
           
       - name: phone 
         description: >
-          "{{ doc('pii_warning') }}"
-
           Customer contact phone number. Nullable — not required at registration.
           Format is not validated or normalised during staging.
 
       - name: address 
-        description:
+        description: >
           Street address of the customer. **Always NULL in this model** — this field does
           not exist in the raw source and is stubbed for schema compatibility with
           the haunted house visitor schema.
 
       - name: city 
-        description:
+        description: >
           City of the customer. **Always NULL in this model** — not present in the raw
           source. Stubbed for haunted house schema compatibility.
 
       - name: state 
-        description:
+        description: >
           State code of the customer (e.g. 'CA', 'TX'). **Always NULL in this model** —
           not present in the raw source. Stubbed for haunted house schema compatibility.
 
       - name: zip_code
-        description:
+        description: >
           Postal zip code of the customer. **Always NULL in this model** — not present in
           the raw source. Stubbed for haunted house schema compatibility.
 
       - name: age 
-        description:
+        description: >
           Customer's current age in whole years, calculated as
           `DATEDIFF('year', date_of_birth, CURRENT_DATE())`. Recalculated on every refresh,
           so this value changes when a customer has a birthday. Do not use this column for
@@ -126,7 +121,7 @@ models:
           - not_null
 
       - name: loyalty_points
-        description: "{{ doc('loyalty_points_derivation') }}"
+        description: na
         data_tests:
           - not_null
 
