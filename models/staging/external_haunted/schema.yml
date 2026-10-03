@@ -8,7 +8,7 @@ models:
 
       `ride_id` is cast to integer and aliased as `haunted_house_id`. `thrill_level`
       is converted to a numeric `fear_level` (1–5) using the standard mapping.
-      See `{{ doc('fear_level_mapping') }}` for the full mapping table.
+      
 
       This model is the reference dimension for all haunted house analytics.
       It feeds `fct_haunted_house_tickets` and all `agg_*` haunted models.
@@ -39,7 +39,7 @@ models:
           - not_null
 
       - name: fear_level
-        description: "{{ doc('fear_level_mapping') }}"
+        description: na
         data_tests:
           - not_null
           - accepted_values:
@@ -63,52 +63,52 @@ models:
       `ticket_price` is sourced from `raw_tickets.final_price` (amount actually paid).
 
       Owner: operations@themeparkanalytics.com
-      columns:
-        - name: ticket_id
-          description: >
-            Natural primary key for the ticket record, sourced from `raw_tickets.ticket_id`.
-            Varchar. Unique — each ticket is assigned to exactly one haunted house.
-          data_tests:
-            - unique
-            - not_null
+    columns:
+      - name: ticket_id
+        description: >
+          Natural primary key for the ticket record, sourced from `raw_tickets.ticket_id`.
+          Varchar. Unique — each ticket is assigned to exactly one haunted house.
+        data_tests:
+          - unique
+          - not_null
 
-        - name: customer_id
-          description: >
-            Foreign key to `stg_customer_data__customers.customer_id`. Identifies the
-            visiting customer.
-          data_tests:
-            - not_null
+      - name: customer_id
+        description: >
+          Foreign key to `stg_customer_data__customers.customer_id`. Identifies the
+          visiting customer.
+        data_tests:
+          - not_null
 
-        - name: haunted_house_id
-          description: >
-            Foreign key to `stg_external_haunted__haunted_houses.haunted_house_id`.
-            Assigned deterministically by round-robin distribution — not recorded at
-            point of sale. See model description for the assignment formula.
-          data_tests:
-            - not_null
+      - name: haunted_house_id
+        description: >
+          Foreign key to `stg_external_haunted__haunted_houses.haunted_house_id`.
+          Assigned deterministically by round-robin distribution — not recorded at
+          point of sale. See model description for the assignment formula.
+        data_tests:
+          - not_null
 
-        - name: visit_date
-          description: >
-            Date the ticket is valid for (YYYY-MM-DD). Sourced from `raw_tickets.visit_date`.
-            Use for time-series and seasonal analysis of haunted house visits.
+      - name: visit_date
+        description: >
+          Date the ticket is valid for (YYYY-MM-DD). Sourced from `raw_tickets.visit_date`.
+          Use for time-series and seasonal analysis of haunted house visits.
 
-        - name: ticket_price
-          description: >
-            Amount the customer paid for the ticket in USD, sourced from
-            `raw_tickets.final_price`, cast to `numeric(10,2)`. This is the revenue
-            measure for haunted house ticket analytics.
-          data_tests:
-            - not_null
+      - name: ticket_price
+        description: >
+          Amount the customer paid for the ticket in USD, sourced from
+          `raw_tickets.final_price`, cast to `numeric(10,2)`. This is the revenue
+          measure for haunted house ticket analytics.
+        data_tests:
+          - not_null
 
-        - name: created_at
-          description: >
-            Timestamp of the ticket purchase, sourced from `raw_tickets.purchase_date::timestamp`.
-            Represents when the ticket was bought, not when the visit occurred.
+      - name: created_at
+        description: >
+          Timestamp of the ticket purchase, sourced from `raw_tickets.purchase_date::timestamp`.
+          Represents when the ticket was bought, not when the visit occurred.
 
-        - name: updated_at
-          description: >
-            Set equal to `created_at` (purchase_date::timestamp). The raw source carries no
-            separate update timestamp for ticket records.
+      - name: updated_at
+        description: >
+          Set equal to `created_at` (purchase_date::timestamp). The raw source carries no
+          separate update timestamp for ticket records.
 
 # -----------------------------------------------------------------------------------
 # Unite Tests

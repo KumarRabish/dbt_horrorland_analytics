@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_park_assets_rides
+  - name: stg_park_assets__rides
     description: >
       Staged ride and attraction catalog from `RAW.raw_rides`.
       One row per physical ride asset. Grain is `ride_id`.
