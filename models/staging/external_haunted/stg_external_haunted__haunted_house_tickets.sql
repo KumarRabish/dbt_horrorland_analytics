@@ -1,4 +1,4 @@
-{{ config(materialized = view) }}
+{{ config(materialized = 'view') }}
 
 -- Maps raw tickets to haunted house ticket schema
 -- Since raw tickets have no haunted_house_id, we assign on deterministically
