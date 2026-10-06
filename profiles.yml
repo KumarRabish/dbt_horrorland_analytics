@@ -1,0 +1,10 @@
+theme_park:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      role: 'ACCOUNTADMIN'
+      warehouse: 'DBT_WH'
+      database: 'THEME_PARK'
+      schema: 'RAW'
+      threads: 8
